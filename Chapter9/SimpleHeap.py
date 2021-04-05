@@ -7,12 +7,13 @@ class HeapElem:
 class Heap:
     def __init__(self):
         self.heapArr = [HeapElem(int(), None)]
+        self.numOfData = int()
 
     def HeapInit(self):
-        self.__init__()
+        self.numOfData = 0
 
     def HIsEmpty(self):
-        if len(self.heapArr) == 1:
+        if self.numOfData == 0:
             return True
         else:
             return False
@@ -30,9 +31,9 @@ class Heap:
         return Heap.GetLChildIDX(idx) + 1
 
     def GetHiPriChildIDX(self, idx):
-        if Heap.GetLChildIDX(idx) > len(self.heapArr) - 1:
+        if Heap.GetLChildIDX(idx) > self.numOfData:
             return 0
-        elif Heap.GetLChildIDX(idx) == len(self.heapArr) - 1:
+        elif Heap.GetLChildIDX(idx) == self.numOfData:
             return Heap.GetLChildIDX(idx)
         else:
             if self.heapArr[Heap.GetLChildIDX(idx)].pr > self.heapArr[Heap.GetRChildIDX(idx)].pr:
@@ -42,7 +43,7 @@ class Heap:
 
     # 힙에 데이터 저장
     def HInsert(self, data, priority):
-        idx = len(self.heapArr)
+        idx = self.numOfData + 1
         nelem = HeapElem(priority, data)
         self.heapArr.append(nelem)
         while idx != 1:
@@ -52,20 +53,24 @@ class Heap:
             else:
                 break
 
+        self.numOfData += 1
+
     def HDelete(self):
         retData = self.heapArr[1].data
-        lastElem = self.heapArr[-1]
+        lastElem = self.heapArr[self.numOfData]
 
         parentIdx = 1
         childIdx = self.GetHiPriChildIDX(parentIdx)
 
-        while childIdx == self.GetHiPriChildIDX(1):
+        while childIdx > 0:
             if lastElem.pr <= self.heapArr[childIdx].pr:
                 break
             self.heapArr[parentIdx] = self.heapArr[childIdx]
             parentIdx = childIdx
+            childIdx = self.GetHiPriChildIDX(parentIdx)
 
         self.heapArr[parentIdx] = lastElem
+        self.numOfData -= 1
         return retData
 
 
